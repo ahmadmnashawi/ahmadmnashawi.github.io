@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { profile, stats, experience, projects, otherProjects, skills, education, languages } from './data'
+import { profile, heroStats, journey, experience, projects, otherProjects, skills, education, languages } from './data'
 import './App.css'
 
 const NAV = ['about', 'experience', 'projects', 'skills', 'contact']
@@ -130,6 +130,9 @@ function Header({ theme, toggleTheme }) {
           ))}
         </nav>
         <div className="header-actions">
+          <a href="#contact" className="btn primary talk-btn" onClick={() => setOpen(false)}>
+            Let's talk
+          </a>
           <button className="icon-btn" onClick={toggleTheme} aria-label="Toggle color theme">
             {theme === 'dark' ? Icon.sun : Icon.moon}
           </button>
@@ -151,14 +154,14 @@ function Hero() {
           <p className="eyebrow">
             <span className="dot" /> Open to Front-End roles
           </p>
-          <h1>
-            Hi, I'm <span className="gradient">{profile.name}</span>
-          </h1>
-          <h2>{profile.role}</h2>
-          <p className="hero-sub">
-            I build responsive, fast and accessible web apps with {profile.stack.slice(0, -1).join(', ')} and{' '}
-            {profile.stack.at(-1)} — and I teach others to do the same.
+          <p className="hero-name">{profile.name}</p>
+          <p className="hero-role">
+            {profile.role} · {profile.location}
           </p>
+          <h1>
+            {profile.headline[0]} <span className="gradient">{profile.headline[1]}</span>
+          </h1>
+          <p className="hero-sub">{profile.intro}</p>
           <div className="hero-cta">
             <a href="#projects" className="btn primary">
               View my work
@@ -186,6 +189,14 @@ function Hero() {
           <div className="float-card fc-1">⚛️ React · TypeScript</div>
           <div className="float-card fc-2">🎓 150+ students taught</div>
         </div>
+        <ul className="hero-stats">
+          {heroStats.map((s) => (
+            <li key={s.label}>
+              <strong>{s.value}</strong>
+              <span>{s.label}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
@@ -231,14 +242,18 @@ function About() {
               ))}
             </div>
           </div>
-          <div className="stats reveal">
-            {stats.map((s) => (
-              <div className="stat" key={s.label}>
-                <strong>{s.value}</strong>
-                <span>{s.label}</span>
-              </div>
+          <ol className="journey reveal">
+            {journey.map((j, i) => (
+              <li key={j.stage}>
+                <span className="journey-num">0{i + 1}</span>
+                <div>
+                  <span className="journey-stage">{j.stage}</span>
+                  <h4>{j.title}</h4>
+                  <p>{j.desc}</p>
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </div>
     </section>
@@ -259,6 +274,14 @@ function Experience() {
                   <span className="company">{job.company}</span>
                 </div>
                 <span className="period">{job.period}</span>
+              </div>
+              <div className="metrics">
+                {job.metrics.map((m) => (
+                  <div key={m.label}>
+                    <strong>{m.value}</strong>
+                    <span>{m.label}</span>
+                  </div>
+                ))}
               </div>
               <ul>
                 {job.points.map((p) => (
@@ -281,24 +304,44 @@ function Projects() {
         <div className="projects">
           {projects.map((p, i) => (
             <article className="project reveal" key={p.name}>
-              <div className="project-num">0{i + 1}</div>
-              <div className="project-body">
-                <h4>{p.name}</h4>
-                <p className="tagline">{p.tagline}</p>
-                <ul>
-                  {p.points.map((pt) => (
-                    <li key={pt}>{pt}</li>
-                  ))}
-                </ul>
-                <div className="tags">
-                  {p.tech.map((t) => (
-                    <span key={t}>{t}</span>
-                  ))}
+              <div className="project-top">
+                <span className="project-cat">
+                  0{i + 1} · {p.category}
+                </span>
+                <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
+                  {Icon.github} Public repo {Icon.arrow}
+                </a>
+              </div>
+              <h4>{p.name}</h4>
+              <p className="tagline">{p.tagline}</p>
+              <div className="metrics">
+                {p.metrics.map((m) => (
+                  <div key={m.label}>
+                    <strong>{m.value}</strong>
+                    <span>{m.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="case">
+                <div>
+                  <span className="case-label">Challenge</span>
+                  <p>{p.challenge}</p>
+                </div>
+                <div>
+                  <span className="case-label">Solution</span>
+                  <p>{p.solution}</p>
                 </div>
               </div>
-              <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
-                {Icon.github} Code {Icon.arrow}
-              </a>
+              <ul className="features">
+                {p.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+              <div className="tags">
+                {p.tech.map((t) => (
+                  <span key={t}>{t}</span>
+                ))}
+              </div>
             </article>
           ))}
         </div>
@@ -345,19 +388,35 @@ function Skills() {
 }
 
 function Contact() {
+  const [copied, setCopied] = useState(false)
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.location.href = `mailto:${profile.email}`
+    }
+  }
+
   return (
     <section id="contact" className="section">
       <div className="container">
         <div className="contact reveal">
           <span className="kicker">05 · Contact</span>
-          <h3>Let's build something great together</h3>
+          <h3>Need a front-end developer who ships clean, fast UIs?</h3>
           <p>
-            I'm currently open to Front-End Developer opportunities. Whether you have a role, a project, or just want to say
-            hi — my inbox is always open.
+            I'm open to Front-End Developer roles and freelance projects. Send me a message — I usually reply within a
+            day.
           </p>
+          <button className="email-pill" onClick={copyEmail}>
+            {Icon.mail}
+            <span>{profile.email}</span>
+            <em>{copied ? 'Copied!' : 'Copy'}</em>
+          </button>
           <div className="hero-cta center">
             <a href={`mailto:${profile.email}`} className="btn primary">
-              {Icon.mail} Say hello
+              {Icon.mail} Send an email
             </a>
             <a href={profile.linkedin} className="btn ghost" target="_blank" rel="noreferrer">
               {Icon.linkedin} LinkedIn
