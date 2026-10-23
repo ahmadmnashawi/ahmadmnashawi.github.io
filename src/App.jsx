@@ -38,6 +38,12 @@ const Icon = {
       <path d="M7 17 17 7M7 7h10v10" />
     </svg>
   ),
+  live: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" />
+    </svg>
+  ),
   sun: (
     <svg className="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
       <circle cx="12" cy="12" r="4" />
@@ -321,7 +327,7 @@ function Projects({ c, base }) {
         <div className="projects">
           {c.projects.map((p, i) => (
             <article className="project reveal" key={p.name}>
-              <a className="project-shot" href={p.repo} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+              <a className="project-shot" href={p.demo || p.repo} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
                 {p.image ? (
                   <img src={base + p.image} alt="" width="1120" height="612" loading="lazy" decoding="async" />
                 ) : (
@@ -336,9 +342,16 @@ function Projects({ c, base }) {
                   <span className="project-cat">
                     0{i + 1} · {p.category}
                   </span>
-                  <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
-                    {Icon.github} {ui.publicRepo} {Icon.arrow}
-                  </a>
+                  <div className="project-links">
+                    {p.demo && (
+                      <a className="project-link demo" href={p.demo} target="_blank" rel="noreferrer">
+                        {Icon.live} {ui.liveDemo} {Icon.arrow}
+                      </a>
+                    )}
+                    <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
+                      {Icon.github} {ui.publicRepo}
+                    </a>
+                  </div>
                 </div>
                 <h3>{p.name}</h3>
                 <p className="tagline">{p.tagline}</p>
@@ -371,15 +384,21 @@ function Projects({ c, base }) {
         <h3 className="sub-heading reveal">{ui.projects.other}</h3>
         <div className="mini-grid">
           {c.otherProjects.map((p) => (
-            <a className="mini reveal" key={p.name} href={p.repo} target="_blank" rel="noreferrer">
-              <div className="mini-top">
-                {Icon.github}
-                <span className="mini-arrow">{Icon.arrow}</span>
-              </div>
+            <article className="mini reveal" key={p.name}>
               <h4>{p.name}</h4>
               <p>{p.desc}</p>
               <span className="mini-tech">{p.tech}</span>
-            </a>
+              <div className="mini-links">
+                {p.demo && (
+                  <a href={p.demo} target="_blank" rel="noreferrer">
+                    {Icon.live} {ui.liveDemo}
+                  </a>
+                )}
+                <a href={p.repo} target="_blank" rel="noreferrer">
+                  {Icon.github} {ui.publicRepo}
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       </div>

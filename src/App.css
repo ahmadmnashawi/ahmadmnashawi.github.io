@@ -1628,3 +1628,52 @@ html:not(.js) .reveal {
     font-size: 0.82rem;
   }
 }
+
+/* ---------- Live demo links ---------- */
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-link.demo {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(100deg, var(--accent), var(--accent-2));
+}
+
+.project-link.demo:hover {
+  color: #fff;
+  filter: brightness(1.1);
+}
+
+.mini-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.mini-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.mini-links a:first-child:not(:only-child) {
+  color: var(--accent);
+}
+
+.mini-links a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

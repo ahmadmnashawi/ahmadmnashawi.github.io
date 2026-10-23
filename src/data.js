@@ -22,6 +22,19 @@ const repos = {
   templates: `${GH}/4-HTML-CSS-Templates`,
 }
 
+const PAGES = 'https://ahmadmnashawi.github.io'
+
+const demos = {
+  travel: `${PAGES}/Travel-App/`,
+  swb: `${PAGES}/saas-dashboard/`,
+  connexa: `${PAGES}/Social-Media-Site/home.html`,
+  crud: `${PAGES}/crud-app/`,
+  quiz: `${PAGES}/Quiz-App/`,
+  tasks: `${PAGES}/Student-Task-Manager/`,
+  prayer: `${PAGES}/prayer-times-syria/prayyer%20time/`,
+  templates: `${PAGES}/4-HTML-CSS-Templates/`,
+}
+
 const techs = {
   travel: ['React 18', 'TypeScript', 'Vite', 'Tailwind CSS', 'shadcn/ui', 'TanStack Query', 'React Router', 'Laravel API'],
   swb: ['React 19', 'React Router v7', 'Tailwind CSS', 'Context API'],
@@ -72,7 +85,8 @@ const en = {
       copy: 'Copy',
       copied: 'Copied!',
     },
-    publicRepo: 'Public repo',
+    publicRepo: 'Code',
+    liveDemo: 'Live demo',
     challenge: 'Challenge',
     solution: 'Solution',
     screenshot: 'Screenshot of',
@@ -173,7 +187,7 @@ const en = {
         'Token-based auth against a Laravel REST API, role-based protected routes, TanStack Query for server state and caching, and reusable shadcn/ui components across every screen.',
       features: ['Search, filters & sorting', 'Seat booking', 'Favorites, ratings & comments', 'Admin CRUD for trips, users & bookings'],
       tech: techs.travel,
-      repo: repos.travel,
+      repo: repos.travel, demo: demos.travel,
     },
     {
       name: 'SWB Dashboard',
@@ -191,7 +205,7 @@ const en = {
         'Context API for auth and app state, protected routes with React Router v7, validated forms, modal dialogs for create/edit flows, and loading and error states throughout.',
       features: ['Login & register flow', 'Statistics overview', 'Tasks & projects CRUD', 'Form validation & modals'],
       tech: techs.swb,
-      repo: repos.swb,
+      repo: repos.swb, demo: demos.swb,
     },
     {
       name: 'Connexa',
@@ -208,16 +222,16 @@ const en = {
         'Axios with Bearer-token headers, FormData for image uploads, and pagination-driven infinite scroll, plus a post details page with comments.',
       features: ['Sign up & log in', 'Image posts', 'Infinite-scroll feed', 'Post details & comments'],
       tech: techs.connexa,
-      repo: repos.connexa,
+      repo: repos.connexa, demo: demos.connexa,
     },
   ],
   otherProjects: [
     { name: 'Amazon Clone', tech: 'React.js · Firebase', desc: 'An e-commerce store inspired by Amazon, built end-to-end with React.', repo: repos.amazon },
-    { name: 'Mobile Products CRUD', tech: 'JavaScript · LocalStorage', desc: 'Add, edit, delete and search mobile products with persistent storage.', repo: repos.crud },
-    { name: 'Quiz App', tech: 'JavaScript', desc: 'Interactive quiz application with instant scoring and smooth UX.', repo: repos.quiz },
-    { name: 'Student Task Manager', tech: 'JavaScript', desc: 'Helps students organize tasks and track their progress.', repo: repos.tasks },
-    { name: 'Prayer Times App', tech: 'JavaScript · Public API', desc: 'Displays accurate prayer times by city using a public API.', repo: repos.prayer },
-    { name: 'HTML & CSS Templates', tech: 'HTML · CSS', desc: 'A pack of four landing page templates built with pure HTML & CSS.', repo: repos.templates },
+    { name: 'Mobile Products CRUD', tech: 'JavaScript · LocalStorage', desc: 'Add, edit, delete and search mobile products with persistent storage.', repo: repos.crud, demo: demos.crud },
+    { name: 'Quiz App', tech: 'JavaScript', desc: 'Interactive quiz application with instant scoring and smooth UX.', repo: repos.quiz, demo: demos.quiz },
+    { name: 'Student Task Manager', tech: 'JavaScript', desc: 'Helps students organize tasks and track their progress.', repo: repos.tasks, demo: demos.tasks },
+    { name: 'Prayer Times App', tech: 'JavaScript · Public API', desc: 'Displays accurate prayer times by city using a public API.', repo: repos.prayer, demo: demos.prayer },
+    { name: 'HTML & CSS Templates', tech: 'HTML · CSS', desc: 'A pack of four landing page templates built with pure HTML & CSS.', repo: repos.templates, demo: demos.templates },
   ],
   skills: [
     { group: 'Languages', items: skillItems.languages },
@@ -312,7 +326,8 @@ const ar = {
       copy: 'نسخ',
       copied: 'تم النسخ!',
     },
-    publicRepo: 'الكود على GitHub',
+    publicRepo: 'الكود',
+    liveDemo: 'عرض مباشر',
     challenge: 'التحدّي',
     solution: 'الحل',
     screenshot: 'لقطة شاشة من',
@@ -413,7 +428,7 @@ const ar = {
         'مصادقة بالتوكن مع واجهة Laravel REST، ومسارات محمية حسب الدور، وTanStack Query لإدارة حالة الخادم والتخزين المؤقت، ومكوّنات shadcn/ui قابلة لإعادة الاستخدام في كل الشاشات.',
       features: ['بحث وفلاتر وترتيب', 'حجز المقاعد', 'المفضلة والتقييمات والتعليقات', 'إدارة الرحلات والمستخدمين والحجوزات'],
       tech: techs.travel,
-      repo: repos.travel,
+      repo: repos.travel, demo: demos.travel,
     },
     {
       name: 'SWB Dashboard',
@@ -431,7 +446,7 @@ const ar = {
         'Context API للمصادقة وحالة التطبيق، ومسارات محمية بـReact Router v7، ونماذج مع تحقق، ونوافذ منبثقة للإضافة والتعديل، وحالات تحميل وأخطاء في كل مكان.',
       features: ['تسجيل الدخول وإنشاء حساب', 'لوحة إحصائيات', 'إدارة المهام والمشاريع', 'تحقق من النماذج ونوافذ منبثقة'],
       tech: techs.swb,
-      repo: repos.swb,
+      repo: repos.swb, demo: demos.swb,
     },
     {
       name: 'Connexa',
@@ -448,16 +463,16 @@ const ar = {
         'Axios مع ترويسات Bearer، وFormData لرفع الصور، وتمرير لا نهائي يعتمد على ترقيم الصفحات، إضافةً إلى صفحة تفاصيل المنشور مع التعليقات.',
       features: ['إنشاء حساب وتسجيل دخول', 'منشورات بالصور', 'تمرير لا نهائي', 'تفاصيل المنشور والتعليقات'],
       tech: techs.connexa,
-      repo: repos.connexa,
+      repo: repos.connexa, demo: demos.connexa,
     },
   ],
   otherProjects: [
     { name: 'Amazon Clone', tech: 'React.js · Firebase', desc: 'متجر إلكتروني مستوحى من أمازون، مبني بالكامل باستخدام React.', repo: repos.amazon },
-    { name: 'Mobile Products CRUD', tech: 'JavaScript · LocalStorage', desc: 'إضافة منتجات الموبايلات وتعديلها وحذفها والبحث فيها مع حفظ دائم.', repo: repos.crud },
-    { name: 'Quiz App', tech: 'JavaScript', desc: 'تطبيق اختبارات تفاعلي مع احتساب فوري للنتيجة.', repo: repos.quiz },
-    { name: 'Student Task Manager', tech: 'JavaScript', desc: 'يساعد الطلاب على تنظيم مهامهم ومتابعة تقدّمهم.', repo: repos.tasks },
-    { name: 'Prayer Times App', tech: 'JavaScript · Public API', desc: 'يعرض مواقيت الصلاة بدقة حسب المدينة باستخدام واجهة عامة.', repo: repos.prayer },
-    { name: 'HTML & CSS Templates', tech: 'HTML · CSS', desc: 'مجموعة من أربعة قوالب صفحات هبوط مبنية بـHTML وCSS فقط.', repo: repos.templates },
+    { name: 'Mobile Products CRUD', tech: 'JavaScript · LocalStorage', desc: 'إضافة منتجات الموبايلات وتعديلها وحذفها والبحث فيها مع حفظ دائم.', repo: repos.crud, demo: demos.crud },
+    { name: 'Quiz App', tech: 'JavaScript', desc: 'تطبيق اختبارات تفاعلي مع احتساب فوري للنتيجة.', repo: repos.quiz, demo: demos.quiz },
+    { name: 'Student Task Manager', tech: 'JavaScript', desc: 'يساعد الطلاب على تنظيم مهامهم ومتابعة تقدّمهم.', repo: repos.tasks, demo: demos.tasks },
+    { name: 'Prayer Times App', tech: 'JavaScript · Public API', desc: 'يعرض مواقيت الصلاة بدقة حسب المدينة باستخدام واجهة عامة.', repo: repos.prayer, demo: demos.prayer },
+    { name: 'HTML & CSS Templates', tech: 'HTML · CSS', desc: 'مجموعة من أربعة قوالب صفحات هبوط مبنية بـHTML وCSS فقط.', repo: repos.templates, demo: demos.templates },
   ],
   skills: [
     { group: 'لغات البرمجة', items: skillItems.languages },
