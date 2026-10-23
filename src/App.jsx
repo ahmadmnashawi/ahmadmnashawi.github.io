@@ -4,6 +4,7 @@ import Lab from './Lab'
 import './App.css'
 
 const NAV = ['about', 'experience', 'projects', 'lab', 'skills', 'contact']
+const LANG_PATH = { en: '/', ar: '/ar/' }
 
 const Icon = {
   github: (
@@ -69,7 +70,8 @@ function toggleTheme() {
   }
 }
 
-function useReveal() {
+// Re-runs on language change, since switching languages mounts new elements that start hidden.
+function useReveal(lang) {
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) =>
@@ -81,9 +83,9 @@ function useReveal() {
         }),
       { threshold: 0.12 },
     )
-    document.querySelectorAll('.reveal').forEach((el) => io.observe(el))
+    document.querySelectorAll('.reveal:not(.visible)').forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [])
+  }, [lang])
 }
 
 function useActiveSection() {
@@ -102,7 +104,7 @@ function useActiveSection() {
   return active
 }
 
-function Header({ c, lang }) {
+function Header({ c, lang, onSwitchLang }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const active = useActiveSection()
@@ -135,7 +137,16 @@ function Header({ c, lang }) {
           ))}
         </nav>
         <div className="header-actions">
-          <a href={lang === 'ar' ? '../' : './ar/'} className="lang-btn" hrefLang={lang === 'ar' ? 'en' : 'ar'} aria-label={c.ui.langSwitchLabel}>
+          <a
+            href={LANG_PATH[lang === 'ar' ? 'en' : 'ar']}
+            className="lang-btn"
+            hrefLang={lang === 'ar' ? 'en' : 'ar'}
+            aria-label={c.ui.langSwitchLabel}
+            onClick={(e) => {
+              close()
+              onSwitchLang(e)
+            }}
+          >
             {c.ui.langSwitch}
           </a>
           <a href="#contact" className="btn primary talk-btn" onClick={close}>
@@ -484,11 +495,32 @@ function Contact({ c }) {
   )
 }
 
-export default function App({ lang = 'en' }) {
+export default function App({ lang: initialLang = 'en' }) {
+  const [lang, setLang] = useState(initialLang)
   const c = content[lang]
-  // The Arabic page is served from /ar/, one folder below the site's assets.
-  const base = lang === 'ar' ? '../' : './'
-  useReveal()
+  const base = '/'
+  useReveal(lang)
+
+  // Keep <html lang/dir> and the tab title in sync, and follow the browser's back/forward buttons.
+  useEffect(() => {
+    const root = document.documentElement
+    root.lang = lang
+    root.dir = lang === 'ar' ? 'rtl' : 'ltr'
+    document.title = c.meta.title
+  }, [lang, c])
+
+  useEffect(() => {
+    const onPop = () => setLang(window.location.pathname.startsWith('/ar') ? 'ar' : 'en')
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
+  const switchLang = (e) => {
+    e.preventDefault()
+    const next = lang === 'ar' ? 'en' : 'ar'
+    window.history.pushState(null, '', LANG_PATH[next] + window.location.hash)
+    setLang(next)
+  }
 
   return (
     <>
@@ -496,7 +528,7 @@ export default function App({ lang = 'en' }) {
         {c.ui.skip}
       </a>
       <div className="bg-glow" aria-hidden="true" />
-      <Header c={c} lang={lang} />
+      <Header c={c} lang={lang} onSwitchLang={switchLang} />
       <main id="main" tabIndex={-1}>
         <Hero c={c} base={base} />
         <About c={c} />

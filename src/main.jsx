@@ -4,7 +4,8 @@ import './index.css'
 import App from './App.jsx'
 
 const root = document.getElementById('root')
-const lang = document.documentElement.lang === 'ar' ? 'ar' : 'en'
+// Prerendered pages carry their language on <html>; the dev server only has the URL to go on.
+const lang = document.documentElement.lang === 'ar' || window.location.pathname.startsWith('/ar') ? 'ar' : 'en'
 const app = (
   <StrictMode>
     <App lang={lang} />

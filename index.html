@@ -11,8 +11,8 @@
     <link rel="alternate" hreflang="en" href="https://ahmadmnashawi.github.io/" />
     <link rel="alternate" hreflang="ar" href="https://ahmadmnashawi.github.io/ar/" />
     <link rel="alternate" hreflang="x-default" href="https://ahmadmnashawi.github.io/" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="profile" />
     <meta property="og:site_name" content="Ahmad Nashawi" />
@@ -58,8 +58,7 @@
     <script>
       document.documentElement.classList.add('js')
       try {
-        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-        document.documentElement.dataset.theme = t
+        document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark'
       } catch (e) {
         document.documentElement.dataset.theme = 'dark'
       }

@@ -16,7 +16,7 @@ const escape = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/
 function page(lang) {
   const c = content[lang]
   const url = lang === 'ar' ? `${SITE_URL}ar/` : SITE_URL
-  let html = template
+  const html = template
     .replace('<html lang="en">', `<html lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}">`)
     .replace(/<title>[^<]*<\/title>/, `<title>${escape(c.meta.title)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*/, `$1${escape(c.meta.description)}`)
@@ -28,8 +28,6 @@ function page(lang) {
     .replace(/(<link rel="canonical" href=")[^"]*/, `$1${url}`)
     .replace(/(<meta property="og:locale" content=")[^"]*/, `$1${lang === 'ar' ? 'ar_SA' : 'en_US'}`)
     .replace('<div id="root"></div>', `<div id="root">${render(lang)}</div>`)
-  // The Arabic page lives one folder deeper, so relative asset paths need one more "../".
-  if (lang === 'ar') html = html.replace(/(src|href)="\.\/(?!\/)/g, '$1="../')
   return html
 }
 
