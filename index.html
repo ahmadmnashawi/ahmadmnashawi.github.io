@@ -2,20 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0d17" />
     <title>Ahmad Nashawi · Front-End Developer</title>
     <meta name="description" content="Ahmad Nashawi — Front-End Developer specialised in React.js, TypeScript, JavaScript and Tailwind CSS. Based in Riyadh, Saudi Arabia." />
+    <meta name="author" content="Ahmad Nashawi" />
+    <meta name="theme-color" content="#0b0d17" />
+    <link rel="canonical" href="https://ahmadmnashawi.github.io/" />
+    <link rel="alternate" hreflang="en" href="https://ahmadmnashawi.github.io/" />
+    <link rel="alternate" hreflang="ar" href="https://ahmadmnashawi.github.io/ar/" />
+    <link rel="alternate" hreflang="x-default" href="https://ahmadmnashawi.github.io/" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Ahmad Nashawi" />
     <meta property="og:title" content="Ahmad Nashawi · Front-End Developer" />
-    <meta property="og:description" content="React.js · TypeScript · JavaScript · Tailwind CSS. Front-End Developer & React/Vue.js instructor." />
-    <meta property="og:image" content="https://avatars.githubusercontent.com/u/192372069?v=4" />
-    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Ahmad Nashawi — Front-End Developer specialised in React.js, TypeScript, JavaScript and Tailwind CSS. Based in Riyadh, Saudi Arabia." />
+    <meta property="og:url" content="https://ahmadmnashawi.github.io/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="https://ahmadmnashawi.github.io/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ahmad Nashawi — Front-End Developer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ahmad Nashawi · Front-End Developer" />
+    <meta name="twitter:description" content="Ahmad Nashawi — Front-End Developer specialised in React.js, TypeScript, JavaScript and Tailwind CSS. Based in Riyadh, Saudi Arabia." />
+    <meta name="twitter:image" content="https://ahmadmnashawi.github.io/og.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Ahmad Nashawi",
+        "alternateName": "أحمد نشاوي",
+        "jobTitle": "Front-End Developer",
+        "url": "https://ahmadmnashawi.github.io/",
+        "image": "https://avatars.githubusercontent.com/u/192372069?v=4&s=640",
+        "email": "mailto:ahmadnashawi2003@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Riyadh", "addressCountry": "SA" },
+        "worksFor": { "@type": "Organization", "name": "Technova" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Cordoba Private University" },
+        "knowsAbout": ["React.js", "TypeScript", "JavaScript", "Tailwind CSS", "Vue.js", "REST APIs"],
+        "knowsLanguage": ["ar", "en"],
+        "sameAs": ["https://github.com/ahmadmnashawi", "https://www.linkedin.com/in/ahmad-nashawi-b8717b335/"]
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+    />
     <script>
+      document.documentElement.classList.add('js')
       try {
         var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
         document.documentElement.dataset.theme = t
-      } catch (e) {}
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark'
+      }
     </script>
   </head>
   <body>

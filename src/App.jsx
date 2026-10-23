@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { profile, heroStats, journey, experience, projects, otherProjects, skills, education, languages } from './data'
+import { content, links } from './data'
+import Lab from './Lab'
 import './App.css'
 
-const NAV = ['about', 'experience', 'projects', 'skills', 'contact']
+const NAV = ['about', 'experience', 'projects', 'lab', 'skills', 'contact']
 
 const Icon = {
   github: (
@@ -33,42 +34,33 @@ const Icon = {
     </svg>
   ),
   arrow: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M7 17 17 7M7 7h10v10" />
     </svg>
   ),
   sun: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+    <svg className="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
     </svg>
   ),
   moon: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
     </svg>
   ),
 }
 
-function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    try {
-      const saved = localStorage.getItem('theme')
-      if (saved) return saved
-    } catch {
-      // storage unavailable
-    }
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
-  })
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    try {
-      localStorage.setItem('theme', theme)
-    } catch {
-      // storage unavailable
-    }
-  }, [theme])
-  return [theme, () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))]
+// The inline script in index.html sets data-theme before paint; this just keeps it in sync.
+function toggleTheme() {
+  const root = document.documentElement
+  const next = root.dataset.theme === 'light' ? 'dark' : 'light'
+  root.dataset.theme = next
+  try {
+    localStorage.setItem('theme', next)
+  } catch {
+    // storage unavailable
+  }
 }
 
 function useReveal() {
@@ -104,10 +96,11 @@ function useActiveSection() {
   return active
 }
 
-function Header({ theme, toggleTheme }) {
+function Header({ c, lang }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const active = useActiveSection()
+  const close = () => setOpen(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -119,24 +112,40 @@ function Header({ theme, toggleTheme }) {
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container header-inner">
-        <a href="#top" className="logo" onClick={() => setOpen(false)}>
+        <a href="#top" className="logo" onClick={close} aria-label={c.name}>
           AN<span>.</span>
         </a>
-        <nav className={`nav ${open ? 'open' : ''}`}>
+        <nav id="site-nav" className={`nav ${open ? 'open' : ''}`} aria-label={c.ui.navLabel}>
           {NAV.map((id) => (
-            <a key={id} href={`#${id}`} className={active === id ? 'active' : ''} onClick={() => setOpen(false)}>
-              {id}
+            <a
+              key={id}
+              href={`#${id}`}
+              className={active === id ? 'active' : ''}
+              aria-current={active === id ? 'location' : undefined}
+              onClick={close}
+            >
+              {c.ui.nav[id]}
             </a>
           ))}
         </nav>
         <div className="header-actions">
-          <a href="#contact" className="btn primary talk-btn" onClick={() => setOpen(false)}>
-            Let's talk
+          <a href={lang === 'ar' ? '../' : './ar/'} className="lang-btn" hrefLang={lang === 'ar' ? 'en' : 'ar'} aria-label={c.ui.langSwitchLabel}>
+            {c.ui.langSwitch}
           </a>
-          <button className="icon-btn" onClick={toggleTheme} aria-label="Toggle color theme">
-            {theme === 'dark' ? Icon.sun : Icon.moon}
+          <a href="#contact" className="btn primary talk-btn" onClick={close}>
+            {c.ui.talk}
+          </a>
+          <button className="icon-btn" onClick={toggleTheme} aria-label={c.ui.theme}>
+            {Icon.sun}
+            {Icon.moon}
           </button>
-          <button className={`menu-btn ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)} aria-label="Toggle menu">
+          <button
+            className={`menu-btn ${open ? 'open' : ''}`}
+            onClick={() => setOpen((o) => !o)}
+            aria-label={c.ui.menu}
+            aria-expanded={open}
+            aria-controls="site-nav"
+          >
             <span />
             <span />
           </button>
@@ -146,15 +155,16 @@ function Header({ theme, toggleTheme }) {
   )
 }
 
-function Hero() {
+function Hero({ c, base }) {
+  const { profile, ui } = c
   return (
     <section className="hero" id="top">
       <div className="container hero-inner">
         <div className="hero-text">
           <p className="eyebrow">
-            <span className="dot" /> Open to Front-End roles
+            <span className="dot" /> {ui.openToWork}
           </p>
-          <p className="hero-name">{profile.name}</p>
+          <p className="hero-name">{c.name}</p>
           <p className="hero-role">
             {profile.role} · {profile.location}
           </p>
@@ -164,35 +174,35 @@ function Hero() {
           <p className="hero-sub">{profile.intro}</p>
           <div className="hero-cta">
             <a href="#projects" className="btn primary">
-              View my work
+              {ui.viewWork}
             </a>
-            <a href={profile.cv} className="btn ghost" download>
-              {Icon.download} Download CV
+            <a href={base + links.cv} className="btn ghost" download>
+              {Icon.download} {ui.downloadCv}
             </a>
           </div>
           <div className="socials">
-            <a href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub">
+            <a href={links.github} target="_blank" rel="noreferrer" aria-label="GitHub">
               {Icon.github}
             </a>
-            <a href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <a href={links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
               {Icon.linkedin}
             </a>
-            <a href={`mailto:${profile.email}`} aria-label="Email">
+            <a href={`mailto:${links.email}`} aria-label="Email">
               {Icon.mail}
             </a>
           </div>
         </div>
         <div className="hero-photo">
           <div className="photo-ring">
-            <img src={profile.avatar} alt={profile.name} width="320" height="320" />
+            <img src={links.avatar} alt={c.name} width="320" height="320" fetchPriority="high" />
           </div>
-          <div className="float-card fc-1">⚛️ React · TypeScript</div>
-          <div className="float-card fc-2">🎓 150+ students taught</div>
+          <div className="float-card fc-1">⚛️ {ui.floatStack}</div>
+          <div className="float-card fc-2">🎓 {ui.floatStudents}</div>
         </div>
         <ul className="hero-stats">
-          {heroStats.map((s) => (
+          {c.heroStats.map((s) => (
             <li key={s.label}>
-              <strong>{s.value}</strong>
+              <strong dir="ltr">{s.value}</strong>
               <span>{s.label}</span>
             </li>
           ))}
@@ -206,36 +216,36 @@ function SectionTitle({ kicker, title }) {
   return (
     <div className="section-title reveal">
       <span>{kicker}</span>
-      <h3>{title}</h3>
+      <h2>{title}</h2>
     </div>
   )
 }
 
-function About() {
+function About({ c }) {
   return (
     <section id="about" className="section">
       <div className="container">
-        <SectionTitle kicker="01 · About" title="A bit about me" />
+        <SectionTitle {...c.ui.about} />
         <div className="about-grid">
           <div className="about-text reveal">
-            <p>{profile.summary}</p>
+            <p>{c.profile.summary}</p>
             <ul className="meta">
               <li>
-                {Icon.pin} {profile.location}
+                {Icon.pin} {c.profile.location}
               </li>
               <li>
-                {Icon.mail} <a href={`mailto:${profile.email}`}>{profile.email}</a>
+                {Icon.mail} <a href={`mailto:${links.email}`}>{links.email}</a>
               </li>
             </ul>
             <div className="edu-card">
               <div>
-                <strong>{education.degree}</strong>
-                <span>{education.school}</span>
+                <strong>{c.education.degree}</strong>
+                <span>{c.education.school}</span>
               </div>
-              <em>{education.period}</em>
+              <em>{c.education.period}</em>
             </div>
             <div className="langs">
-              {languages.map((l) => (
+              {c.languages.map((l) => (
                 <span key={l.name}>
                   <strong>{l.name}</strong> · {l.level}
                 </span>
@@ -243,12 +253,12 @@ function About() {
             </div>
           </div>
           <ol className="journey reveal">
-            {journey.map((j, i) => (
+            {c.journey.map((j, i) => (
               <li key={j.stage}>
                 <span className="journey-num">0{i + 1}</span>
                 <div>
                   <span className="journey-stage">{j.stage}</span>
-                  <h4>{j.title}</h4>
+                  <h3>{j.title}</h3>
                   <p>{j.desc}</p>
                 </div>
               </li>
@@ -260,29 +270,35 @@ function About() {
   )
 }
 
-function Experience() {
+function Metrics({ items }) {
+  return (
+    <div className="metrics">
+      {items.map((m) => (
+        <div key={m.label}>
+          <strong dir="ltr">{m.value}</strong>
+          <span>{m.label}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Experience({ c }) {
   return (
     <section id="experience" className="section">
       <div className="container">
-        <SectionTitle kicker="02 · Experience" title="Where I've worked" />
+        <SectionTitle {...c.ui.experience} />
         <ol className="timeline">
-          {experience.map((job) => (
+          {c.experience.map((job) => (
             <li className="reveal" key={job.title + job.company}>
               <div className="tl-head">
                 <div>
-                  <h4>{job.title}</h4>
+                  <h3>{job.title}</h3>
                   <span className="company">{job.company}</span>
                 </div>
                 <span className="period">{job.period}</span>
               </div>
-              <div className="metrics">
-                {job.metrics.map((m) => (
-                  <div key={m.label}>
-                    <strong>{m.value}</strong>
-                    <span>{m.label}</span>
-                  </div>
-                ))}
-              </div>
+              <Metrics items={job.metrics} />
               <ul>
                 {job.points.map((p) => (
                   <li key={p}>{p}</li>
@@ -296,65 +312,71 @@ function Experience() {
   )
 }
 
-function Projects() {
+function Projects({ c, base }) {
+  const { ui } = c
   return (
     <section id="projects" className="section">
       <div className="container">
-        <SectionTitle kicker="03 · Projects" title="Things I've built" />
+        <SectionTitle kicker={ui.projects.kicker} title={ui.projects.title} />
         <div className="projects">
-          {projects.map((p, i) => (
+          {c.projects.map((p, i) => (
             <article className="project reveal" key={p.name}>
-              <div className="project-top">
-                <span className="project-cat">
-                  0{i + 1} · {p.category}
-                </span>
-                <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
-                  {Icon.github} Public repo {Icon.arrow}
-                </a>
-              </div>
-              <h4>{p.name}</h4>
-              <p className="tagline">{p.tagline}</p>
-              <div className="metrics">
-                {p.metrics.map((m) => (
-                  <div key={m.label}>
-                    <strong>{m.value}</strong>
-                    <span>{m.label}</span>
+              <a className="project-shot" href={p.repo} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+                {p.image ? (
+                  <img src={base + p.image} alt="" width="1120" height="612" loading="lazy" decoding="async" />
+                ) : (
+                  <div className="shot-cover">
+                    <span>{p.name}</span>
+                    <small>{p.category}</small>
                   </div>
-                ))}
-              </div>
-              <div className="case">
-                <div>
-                  <span className="case-label">Challenge</span>
-                  <p>{p.challenge}</p>
+                )}
+              </a>
+              <div className="project-info">
+                <div className="project-top">
+                  <span className="project-cat">
+                    0{i + 1} · {p.category}
+                  </span>
+                  <a className="project-link" href={p.repo} target="_blank" rel="noreferrer">
+                    {Icon.github} {ui.publicRepo} {Icon.arrow}
+                  </a>
                 </div>
-                <div>
-                  <span className="case-label">Solution</span>
-                  <p>{p.solution}</p>
+                <h3>{p.name}</h3>
+                <p className="tagline">{p.tagline}</p>
+                <Metrics items={p.metrics} />
+                <div className="case">
+                  <div>
+                    <span className="case-label">{ui.challenge}</span>
+                    <p>{p.challenge}</p>
+                  </div>
+                  <div>
+                    <span className="case-label">{ui.solution}</span>
+                    <p>{p.solution}</p>
+                  </div>
                 </div>
-              </div>
-              <ul className="features">
-                {p.features.map((f) => (
-                  <li key={f}>{f}</li>
-                ))}
-              </ul>
-              <div className="tags">
-                {p.tech.map((t) => (
-                  <span key={t}>{t}</span>
-                ))}
+                <ul className="features">
+                  {p.features.map((f) => (
+                    <li key={f}>{f}</li>
+                  ))}
+                </ul>
+                <div className="tags" dir="ltr">
+                  {p.tech.map((t) => (
+                    <span key={t}>{t}</span>
+                  ))}
+                </div>
               </div>
             </article>
           ))}
         </div>
 
-        <h4 className="sub-heading reveal">Other noteworthy projects</h4>
+        <h3 className="sub-heading reveal">{ui.projects.other}</h3>
         <div className="mini-grid">
-          {otherProjects.map((p) => (
+          {c.otherProjects.map((p) => (
             <a className="mini reveal" key={p.name} href={p.repo} target="_blank" rel="noreferrer">
               <div className="mini-top">
                 {Icon.github}
                 <span className="mini-arrow">{Icon.arrow}</span>
               </div>
-              <h5>{p.name}</h5>
+              <h4>{p.name}</h4>
               <p>{p.desc}</p>
               <span className="mini-tech">{p.tech}</span>
             </a>
@@ -365,15 +387,29 @@ function Projects() {
   )
 }
 
-function Skills() {
+function LabSection({ c }) {
+  return (
+    <section id="lab" className="section">
+      <div className="container">
+        <SectionTitle kicker={c.ui.lab.kicker} title={c.ui.lab.title} />
+        <p className="section-intro reveal">{c.ui.lab.intro}</p>
+        <div className="reveal">
+          <Lab t={c.labText} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Skills({ c }) {
   return (
     <section id="skills" className="section">
       <div className="container">
-        <SectionTitle kicker="04 · Skills" title="My toolbox" />
+        <SectionTitle {...c.ui.skills} />
         <div className="skills">
-          {skills.map((s) => (
+          {c.skills.map((s) => (
             <div className="skill-group reveal" key={s.group}>
-              <h5>{s.group}</h5>
+              <h3>{s.group}</h3>
               <div className="chips">
                 {s.items.map((it) => (
                   <span key={it}>{it}</span>
@@ -387,15 +423,16 @@ function Skills() {
   )
 }
 
-function Contact() {
+function Contact({ c }) {
+  const t = c.ui.contact
   const [copied, setCopied] = useState(false)
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(profile.email)
+      await navigator.clipboard.writeText(links.email)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      window.location.href = `mailto:${profile.email}`
+      window.location.href = `mailto:${links.email}`
     }
   }
 
@@ -403,25 +440,22 @@ function Contact() {
     <section id="contact" className="section">
       <div className="container">
         <div className="contact reveal">
-          <span className="kicker">05 · Contact</span>
-          <h3>Need a front-end developer who ships clean, fast UIs?</h3>
-          <p>
-            I'm open to Front-End Developer roles and freelance projects. Send me a message — I usually reply within a
-            day.
-          </p>
+          <span className="kicker">{t.kicker}</span>
+          <h2>{t.title}</h2>
+          <p>{t.text}</p>
           <button className="email-pill" onClick={copyEmail}>
             {Icon.mail}
-            <span>{profile.email}</span>
-            <em>{copied ? 'Copied!' : 'Copy'}</em>
+            <span dir="ltr">{links.email}</span>
+            <em aria-live="polite">{copied ? t.copied : t.copy}</em>
           </button>
           <div className="hero-cta center">
-            <a href={`mailto:${profile.email}`} className="btn primary">
-              {Icon.mail} Send an email
+            <a href={`mailto:${links.email}`} className="btn primary">
+              {Icon.mail} {t.send}
             </a>
-            <a href={profile.linkedin} className="btn ghost" target="_blank" rel="noreferrer">
+            <a href={links.linkedin} className="btn ghost" target="_blank" rel="noreferrer">
               {Icon.linkedin} LinkedIn
             </a>
-            <a href={profile.github} className="btn ghost" target="_blank" rel="noreferrer">
+            <a href={links.github} className="btn ghost" target="_blank" rel="noreferrer">
               {Icon.github} GitHub
             </a>
           </div>
@@ -431,26 +465,32 @@ function Contact() {
   )
 }
 
-export default function App() {
-  const [theme, toggleTheme] = useTheme()
+export default function App({ lang = 'en' }) {
+  const c = content[lang]
+  // The Arabic page is served from /ar/, one folder below the site's assets.
+  const base = lang === 'ar' ? '../' : './'
   useReveal()
 
   return (
     <>
+      <a className="skip-link" href="#main">
+        {c.ui.skip}
+      </a>
       <div className="bg-glow" aria-hidden="true" />
-      <Header theme={theme} toggleTheme={toggleTheme} />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Contact />
+      <Header c={c} lang={lang} />
+      <main id="main" tabIndex={-1}>
+        <Hero c={c} base={base} />
+        <About c={c} />
+        <Experience c={c} />
+        <Projects c={c} base={base} />
+        <LabSection c={c} />
+        <Skills c={c} />
+        <Contact c={c} />
       </main>
       <footer className="footer">
         <div className="container">
           <p>
-            Designed & built by {profile.name} with React · © {new Date().getFullYear()}
+            {c.ui.footer} · © {new Date().getFullYear()}
           </p>
         </div>
       </footer>

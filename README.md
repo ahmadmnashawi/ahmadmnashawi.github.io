@@ -2,7 +2,7 @@
 
 Personal portfolio website built with **React** and **Vite**, deployed on GitHub Pages.
 
-🔗 Live: https://ahmadmnashawi.github.io/
+🔗 Live: https://ahmadmnashawi.github.io/ · Arabic: https://ahmadmnashawi.github.io/ar/
 
 ## Run locally
 
@@ -11,4 +11,10 @@ npm install
 npm run dev
 ```
 
-All content (experience, projects, skills) lives in `src/data.js`.
+## How it works
+
+- All content (English and Arabic) lives in `src/data.js`.
+- `src/Lab.jsx` holds the interactive UI Lab demos.
+- `npm run build` builds the site, then `scripts/prerender.js` renders both languages to static HTML
+  (`dist/index.html` and `dist/ar/index.html`) so search engines and link previews see the full content.
+- Every push to `main` deploys through `.github/workflows/deploy.yml`.
